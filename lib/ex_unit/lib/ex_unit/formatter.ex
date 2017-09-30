@@ -126,7 +126,7 @@ defmodule ExUnit.Formatter do
 
   @doc false
   def format_assertion_error(%ExUnit.AssertionError{} = struct) do
-    format_assertion_error(%{}, struct, [], :infinity, fn _, msg -> msg end, "")
+    format_assertion_error(%{}, struct, [], :infinity, fn(_, msg) -> msg end, "")
   end
 
   def format_assertion_error(test, struct, stack, width, formatter, counter_padding) do

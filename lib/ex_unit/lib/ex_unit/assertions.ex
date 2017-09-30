@@ -101,6 +101,8 @@ defmodule ExUnit.Assertions do
   defmacro assert({:=, _, [left, right]} = assertion) do
     code = escape_quoted(:assert, assertion)
 
+    IO.inspect left
+    IO.inspect right
     left = Macro.expand(left, __CALLER__)
     vars = collect_vars_from_pattern(left)
     pins = collect_pins_from_pattern(left, __CALLER__.vars)
@@ -114,6 +116,7 @@ defmodule ExUnit.Assertions do
           x when x in [nil, false] ->
             raise ExUnit.AssertionError,
               expr: expr,
+              right: right,
               message: "Expected truthy, got #{inspect right}"
           _ ->
             :ok
@@ -483,7 +486,7 @@ defmodule ExUnit.Assertions do
   end
 
   defp mailbox_message(0, _mailbox), do: "\nThe process mailbox is empty."
-  defp mailbox_message(length, mailbox) when length > 10 do
+  defp mailbox_message(length, mailbox) when length > @max_mailbox_length do
     "\nProcess mailbox:" <> mailbox <>
       "\nShowing only #{@max_mailbox_length} of #{length} messages."
   end
